@@ -10,10 +10,6 @@ class Purge(commands.Cog, name="purge"):
     def __init__(self, client):
         self.client = client
         
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("Purge.py is ready!")
-        
     @commands.hybrid_command(
         name="purge", 
         description="Purge command",

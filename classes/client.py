@@ -5,6 +5,8 @@ from discord.ext import commands
 from logging import Logger
 from logging import INFO as LOG_INFO
 from typing import List
+from halo import Halo
+import time
 
 class Client(commands.Bot):
     appInfo: AppInfo
@@ -17,7 +19,20 @@ class Client(commands.Bot):
         super().__init__(command_prefix=command_prefix, **kwargs)
         
     def log(self, name: str, guild: int, user: int, version: str):
-        print(f"Logged as: {name} | discord.py {version} Guilds: {guild} Users: {user}")
+        data_list = [
+            { "pre": f"Logging in...", "finish": f"Logged in as {name}", "loaded": False },
+            { "pre": f"Getting version", "finish": f"Version {version}", "loaded": False },
+            { "pre": f"Fetching guilds", "finish": f"{guild} guild(s)", "loaded": False },
+            { "pre": f"Fetching users", "finish": f"{user} user(s)", "loaded": False },
+        ]
+        
+        spinner = Halo(text="", spinner="dots")
+        for data in data_list:
+            spinner.text = data['pre']
+            spinner.start()
+            time.sleep(1.5)
+            data['loaded'] = True
+            spinner.succeed(data['finish'])
         
     def log_message(self, message: str):
         print(f"{message}")

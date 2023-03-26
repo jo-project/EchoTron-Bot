@@ -1,5 +1,4 @@
 import discord
-import logging
 import os
 
 from dotenv import load_dotenv
@@ -9,6 +8,7 @@ from classes.utilities import clean_close, cogs_manager, cogs_directory
 from os import listdir
 
 from keep_alive import keep_alive
+from termcolor import colored
 
 load_dotenv()
 
@@ -31,7 +31,8 @@ class Bot(Client):
 
         # Sync application commands
         synced = await self.tree.sync()
-        self.log_message(f"Application commands synced ({len(synced)})")
+        success_message = colored("[Success]", attrs=["bold"])
+        self.log_message(f"{success_message} Application commands synced ({len(synced)})")
 
     async def setup_hook(self):
         """Initialize the bot, database, prefixes & cogs."""
@@ -41,7 +42,7 @@ class Bot(Client):
         cogs = [f"cogs.{filename[:-3]}" for filename in listdir(
             cogs_directory) if filename.endswith(".py")]
         await cogs_manager(self, "load", cogs)
-        self.log_message(f"Cogs loaded ({len(cogs)}): {', '.join(cogs)}")
+        # self.log_message(f"Cogs loaded ({len(cogs)}): {', '.join(cogs)}")
 
         # Sync application commands
         self.loop.create_task(self.startup())

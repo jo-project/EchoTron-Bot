@@ -10,10 +10,6 @@ class Ping(commands.Cog, name="ping"):
     def __init__(self, client):
         self.client = client
         
-    @commands.Cog.listener()
-    async def on_ready(self):
-        print("Ping.py is ready!")
-        
     @commands.hybrid_command(
         name="ping", 
         description="Ping command",
