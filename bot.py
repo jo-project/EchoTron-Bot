@@ -16,7 +16,7 @@ load_dotenv()
 class Bot(Client):
     def __init__(self, **kwargs):
         super().__init__(
-            activity=discord.Game(name="Booting.."),
+            activity=discord.Game(name="https://discord.gg/uckGjFUvec"),
             allowed_mentions=discord.AllowedMentions(everyone=False),
             case_insensitive=True,
             intents=kwargs.pop("intents", discord.Intents.all()),
