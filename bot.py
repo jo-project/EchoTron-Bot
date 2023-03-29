@@ -2,15 +2,15 @@ import discord
 import os
 
 from dotenv import load_dotenv
+
+load_dotenv()
+
 from classes.client import Client
 from classes.utilities import clean_close, cogs_manager, cogs_directory
 
 from os import listdir
 
-from keep_alive import keep_alive
 from termcolor import colored
-
-load_dotenv()
 
 
 class Bot(Client):
@@ -39,8 +39,16 @@ class Bot(Client):
         await super().setup_hook()
 
         # Cogs loader
-        cogs = [f"cogs.{filename[:-3]}" for filename in listdir(
-            cogs_directory) if filename.endswith(".py")]
+        # cogs = [f"cogs.{filename[:-3]}" for filename in listdir(
+        #     cogs_directory) if filename.endswith(".py")]
+        
+        cogs = []
+        for foldername in os.listdir(cogs_directory):
+            folder_path = os.path.join(cogs_directory, foldername)
+            if os.path.isdir(folder_path):
+                for filename in os.listdir(folder_path):
+                    if filename.lower().endswith(".py"):
+                        cogs.append(f"cogs.{foldername}.{filename[:-3]}")
         await cogs_manager(self, "load", cogs)
         # self.log_message(f"Cogs loaded ({len(cogs)}): {', '.join(cogs)}")
 
@@ -50,10 +58,9 @@ class Bot(Client):
 
 if __name__ == '__main__':
     clean_close()  # Avoid Windows EventLoopPolicy Error
-    keep_alive()
+    # keep_alive() # On Repl
     title = "EchoTron" # The title you want to set for the WSL tab
     os.system(f'echo -ne "\\033]0;{title}\\007"')
-    os.system('clear')
     bot = Bot()
     bot.run(
         os.getenv("TOKEN"),

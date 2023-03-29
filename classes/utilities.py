@@ -13,6 +13,8 @@ from os.path import dirname, abspath, join, basename, splitext
 from sys import modules
 from types import ModuleType
 from typing import Union
+import random
+import re
 
 from prettytable import PrettyTable
 
@@ -24,7 +26,7 @@ cogs_directory = join(root_directory, "cogs")
 
 async def cogs_manager(bot: Client, mode: str, cogs: list[str]) -> None:
     x = PrettyTable()
-    x.field_names = ['Name', 'Mode']
+    x.field_names = ['Cogs', 'Type', 'Mode']
     for cog in cogs:
         try:
             if mode == "unload":
@@ -36,11 +38,33 @@ async def cogs_manager(bot: Client, mode: str, cogs: list[str]) -> None:
             else:
                 raise ValueError("Invalid mode.")
             
+            cogType = cog.split('.')[1]
+            cogName = cog.split('.')[2]
             cogMode = f"{mode}ed".upper()
-            x.add_row([cog, cogMode])
+            x.add_row([cogName, cogType, cogMode])
         except Exception as e:
             raise e
     print(x)
+    
+def random_color() -> discord.Color:
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    return discord.Color.from_rgb(r, g, b)
+
+def convert_color(color: str) -> discord.Color:
+    hex_string = color.strip('#')
+    hex_regex = re.compile('[0-9a-fA-F]{6}')
+    if hex_regex.match(hex_string):
+        rgb = tuple(int(hex_string[i:i+2], 16) for i in (0, 2, 4))
+        return discord.Color.from_rgb(*rgb)
+    else:
+        raise ValueError(f"Invalid hex string: {hex_string}")
+
+def channel_check(channel_id):
+    async def predicate(ctx):
+        return ctx.channel.id == channel_id
+    return commands.check(predicate)
 
 
 def reload_views():

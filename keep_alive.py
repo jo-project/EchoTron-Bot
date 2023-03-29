@@ -1,7 +1,6 @@
 from threading import Thread
 
 from flask import Flask, current_app
-from waitress import serve
 
 app = Flask("keep_alive")
 
@@ -12,6 +11,7 @@ def home():
 
 
 def run():
+    from waitress import serve
     serve(app, host="0.0.0.0", port=8080)
 
 
