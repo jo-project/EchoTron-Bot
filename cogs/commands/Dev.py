@@ -14,7 +14,7 @@ class Dev(commands.Cog, name="test"):
         self.client = client
     
     @commands.hybrid_group(invoke_without_command=True)
-    @channel_check(1090342512947896433)
+    @channel_check(1090608626349113464)
     async def dev(self, ctx: Context):
         pass
     

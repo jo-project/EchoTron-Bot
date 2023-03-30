@@ -11,7 +11,6 @@ class Ready(commands.Cog):
 
     @commands.Cog.listener(name='on_ready')
     async def on_ready(self):
-        os.system('clear')
         self.client.log(name= self.client.user, version=discord_version, guild= len(self.client.guilds), user= len(self.client.users))
 
 async def setup(client: Client):

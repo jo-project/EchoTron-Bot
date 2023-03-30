@@ -12,14 +12,14 @@ from classes.utilities import random_color,channel_check, convert_color
 class Ping(commands.Cog, name="ping"):
     def __init__(self, client: Client):
         self.client = client
-        self.channel_id = 1090342512947896433
+        self.channel_id = 1090608626349113464
         
     @commands.hybrid_command(
         name="ping", 
         description="Ping command",
         with_app_command=True
     )
-    @channel_check(1090342512947896433)
+    @channel_check(1090608626349113464)
     async def ping(self, ctx: Context):
         before = time.monotonic()
         before_time = time.perf_counter()

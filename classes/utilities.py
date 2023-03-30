@@ -6,6 +6,9 @@ import platform
 from discord.ext import commands
 from discord import app_commands
 
+import aiohttp
+import io
+
 from importlib import reload
 from json import load
 from os import listdir
@@ -52,6 +55,23 @@ def random_color() -> discord.Color:
     b = random.randint(0, 255)
     return discord.Color.from_rgb(r, g, b)
 
+def strip_indent(s):
+    pattern = re.compile(r'^[ \t]*(?=\S)', re.MULTILINE)
+    indent = min(len(spaces) for spaces in pattern.findall(s))
+
+    if not indent:
+        return s
+
+    return re.sub(re.compile(r'^[ \t]{%s}' % indent, re.MULTILINE), '', s)
+
+async def generate_image(user: str, url: str):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                return print('Could not download')
+            data = io.BytesIO(await resp.read())
+            return discord.File(data, f"{user}.png")
+
 def convert_color(color: str) -> discord.Color:
     hex_string = color.strip('#')
     hex_regex = re.compile('[0-9a-fA-F]{6}')
@@ -82,6 +102,8 @@ def reload_views():
 def clean_close() -> None:
     if platform.system().lower() == 'windows':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    else:
+        asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
 
 
 def bot_has_permissions(**perms: bool):

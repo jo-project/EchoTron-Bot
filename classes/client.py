@@ -5,7 +5,6 @@ from halo import Halo
 from classes.database import Database
 from termcolor import colored
 import time
-import os
 
 class Client(commands.AutoShardedBot):
     appInfo: AppInfo
@@ -36,6 +35,15 @@ class Client(commands.AutoShardedBot):
             time.sleep(1.5)
             data['loaded'] = True
             spinner.succeed(f"[{coloredText(data['name'])}] {data['finish']}")
+            
+    def log_command_sync(self, amount: int):
+        text = f"Syncing..."
+        coloredText = lambda x: colored(x, "white", attrs=['bold'])
+        spinner = Halo(text="", spinner="dots")
+        spinner.text = f"[{coloredText('Commands')}] {text}"
+        spinner.start()
+        time.sleep(1.5)
+        spinner.succeed(f"[{coloredText('Commands')}] {amount} command(s)")
         
     def log_message(self, message: str):
         print(f"{message}")
